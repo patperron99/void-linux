@@ -18,29 +18,20 @@ select_disk() {
 select_disk
 
 # Variables
-EFI_SIZE="200M"
+EFI_SIZE="1G"
 REPO="https://mirrors.servercentral.com/voidlinux/current/"
 ARCH="x86_64"
 HOSTNAME="myhostname"
-USERNAME="yourusername"
-TIMEZONE="America/Chicago"
+USERNAME="void"
+TIMEZONE="America/Montreal"
 LOCALE="en_US.UTF-8"
 BTRFS_OPTS="rw,noatime,compress=zstd,discard=async"
 
-# Partition the device
-fdisk "$DEVICE" <<EOF
-g
-n
-1
-
-+$EFI_SIZE
-y
-t
-1
-n
-2
-
-w
+# Partition the device using sfdisk
+sfdisk "$DEVICE" <<EOF
+label: gpt
+size=200M, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, name=EFI
+type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name=root
 EOF
 
 # Encrypt the root partition
