@@ -13,7 +13,6 @@ sudo xbps-install -y \
     mesa-dri \
     mesa-vulkan-radeon \
     vulkan-loader \
-    vulkan-radeon \
     linux-firmware-amd \
     linux-firmware
 
@@ -21,7 +20,7 @@ echo "🧱 Installing 32-bit Vulkan support for Steam (multilib)..."
 sudo xbps-install -y \
     mesa-32bit \
     vulkan-loader-32bit \
-    vulkan-radeon-32bit \
+    mesa-vulkan-radeon-32bit \
     libgcc-32bit \
     libstdc++-32bit \
     glibc-32bit

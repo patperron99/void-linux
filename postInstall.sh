@@ -46,13 +46,22 @@ packages=(
     coreutils
     binutils
     util-linux
-    lightdm-gtk-greeter
+    lightdm-webkit2-greeter
     dbus
     elogind
     cmake
     cmatrix
     betterlockscreen
     network-manager-applet
+    tumbler
+    tumbler-plugins-extra
+    slurp
+    swappy
+    grim
+    wlogout
+    autotiling
+    swayfx
+    Waybar
 )
 
 # Update the package database
