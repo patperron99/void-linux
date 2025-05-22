@@ -88,7 +88,9 @@ packages=(
   wlogout
   wlr-randr
   xclip
+  xdg-desktop-portal
   xdg-desktop-portal-wlr
+  xdg-desktop-portal-gtk
   xdg-user-dirs
   xdg-utils
   xfce4-power-manager
