@@ -1,9 +1,13 @@
 #!/bin/bash
+# Repository packags.
+repos=(
+  void-repo-multilib
+  void-repo-nonfree
+  void-repo-nonfree-multilib
+)
 
 # List of packages to install
 packages=(
-  void-repo-multilib
-  void-repo-nonfree
   NetworkManager
   NetworkManager-openvpn
   Signal-Desktop
@@ -68,6 +72,7 @@ packages=(
   qt6-multimedia
   qt6-virtualkeyboard
   ripgrep
+  seatd
   shellcheck
   slurp
   steam
@@ -87,6 +92,7 @@ packages=(
   wget
   wlogout
   wlr-randr
+  wlroots
   xclip
   xdg-desktop-portal
   xdg-desktop-portal-wlr
@@ -100,36 +106,43 @@ packages=(
 
 failed_packages=()
 
+# Add the Repositories
+for repo in "${repos[@]}"; do
+  if sudo xbps-install -y "$repo"; then
+    echo "Successfully added ${repo} repository"
+  else
+    echo "Failed to add ${repo} repository"
+    failed_packages+=("${repo}")
+  fi
+done
+
 # Update the package database
-sudo xbps-install -S
+sudo xbps-install -Su
 
 # Install each package
 for package in "${packages[@]}"; do
-    if sudo xbps-install -y "$package"; then
-      echo "Successfully install ${package}"
-    else
-      echo "Failed to install ${package}"
-      failed_packages+=("${package}")
+  if sudo xbps-install -y "$package"; then
+    echo "Successfully install ${package}"
+  else
+    echo "Failed to install ${package}"
+    failed_packages+=("${package}")
+  fi
 done
-
 
 # Adding flat pack repos
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-
 # Activating runit services
 sudo ln -s /etc/sv/lightdm /var/service/
 sudo ln -s /etc/sv/dbus /var/service/
-sudo ln -s /etc/sv/elogind /var/service/
 sudo ln -s /etc/sv/bluetoothd /var/service/
-
 
 # Notify about failed packages
 if [ ${#failed_packages[@]} -ne 0 ]; then
-    echo "The following packages failed to install:"
-    for pkg in "${failed_packages[@]}"; do
-        echo "$pkg"
-    done
+  echo "The following packages failed to install:"
+  for pkg in "${failed_packages[@]}"; do
+    echo "$pkg"
+  done
 else
-    echo "All packages installed successfully."
+  echo "All packages installed successfully."
 fi
