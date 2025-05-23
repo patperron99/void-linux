@@ -10,12 +10,10 @@ repos=(
 packages=(
   NetworkManager
   NetworkManager-openvpn
-  Signal-Desktop
   Thunar
   Waybar
   acpi
   alacritty
-  ansible
   autotiling
   base-devel
   base-system
@@ -41,41 +39,32 @@ packages=(
   grub-customizer
   grub-x86_64-efi
   kitty
-  krita
   libgcc-32bit
   libstdc++-32bit
-  libvirt
-  lightdm
-  lightdm-gtk-greeter-settings
-  lightdm-webkit2-greeter
   linux-firmware
   linux-mainline
   lshw
   lxappearance
   lxsession
   make
-  mesa-32bit
-  mesa-vulkan-radeon
-  mesa-vulkan-radeon-32bit
   neovim
   nerd-fonts
   nodejs-lts
   pavucontrol
   plymouth
-  podman
   psmisc
   pulseaudio
   python3-PyQt5-devel
   python3-PyQt5-devel-tools
   python3-pip
-  qemu
   qt6-multimedia
   qt6-virtualkeyboard
   ripgrep
+  rofi
+  sddm
   seatd
   shellcheck
   slurp
-  steam
   stow
   swappy
   swayfx
@@ -84,10 +73,7 @@ packages=(
   tmux
   tumbler
   tumbler-plugins-extra
-  vim
-  virt-manager
   vivaldi
-  vulkan-loader-32bit
   wdisplays
   wget
   wlogout
@@ -102,6 +88,24 @@ packages=(
   xfce4-power-manager
   xorg-server-xephyr
   yazi
+)
+
+extra_packages=(
+  Signal-Desktop
+  steam
+  libvirt
+  krita
+  qemu
+  podman
+  virt-manager
+  ansible
+)
+
+video_packages=(
+  mesa-32bit
+  mesa-vulkan-radeon
+  mesa-vulkan-radeon-32bit
+  vulkan-loader-32bit
 )
 
 failed_packages=()
@@ -128,6 +132,32 @@ for package in "${packages[@]}"; do
     failed_packages+=("${package}")
   fi
 done
+
+# ask to install extra packages.
+read -p "Do you want to install extra packages? (y/n): " answer
+if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+  for package in "${extra_packages[@]}"; do
+    if sudo xbps-install -y "$package"; then
+      echo "Successfully install ${package}"
+    else
+      echo "Failed to install ${package}"
+      failed_packages+=("${package}")
+    fi
+  done
+fi
+
+# ask to install video packages.
+read -p "Do you want to install video packages? (y/n): " answer
+if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+  for package in "${video_packages[@]}"; do
+    if sudo xbps-install -y "$package"; then
+      echo "Successfully install ${package}"
+    else
+      echo "Failed to install ${package}"
+      failed_packages+=("${package}")
+    fi
+  done
+fi
 
 # Adding flat pack repos
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
