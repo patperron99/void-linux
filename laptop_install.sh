@@ -47,7 +47,7 @@ packages=(
   lazygit
   light
   lightdm
-  lightdm-webkit2-greeter
+#  lightdm-webkit2-greeter
   lshw-B.02.20_1
   lxappearance
   mesa-demos
@@ -68,7 +68,7 @@ packages=(
   qt6-svg
   ripgrep
   rofi
-  sddm
+#  sddm
   slurp
   sof-firmware
   stow
@@ -77,9 +77,6 @@ packages=(
   swaylock
   udisks2
   vivaldi
-  void-repo-multilib
-  void-repo-multilib-nonfree
-  void-repo-nonfree
   wget
   wireplumber
   wl-clipboard
@@ -91,8 +88,8 @@ packages=(
   xdg-user-dirs
   xf86-video-nouveau
   xfce4-power-manager
-  xorg-minimal
-  xorg-server-xephyr
+#  xorg-minimal
+#  xorg-server-xephyr
 )
 
 failed_packages=()
