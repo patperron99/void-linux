@@ -32,7 +32,6 @@ packages=(
   elogind
   fastfetch
   flatpak
-  foot
   fwupd
   fzf
   ghostty
@@ -47,7 +46,7 @@ packages=(
   lazygit
   light
   lightdm
-#  lightdm-webkit2-greeter
+  lightdm-webkit2-greeter
   lshw-B.02.20_1
   lxappearance
   mesa-demos
@@ -56,6 +55,7 @@ packages=(
   nerd-fonts
   network-manager-applet
   nodejs
+  openssl
   pavucontrol
   pipewire
   polkit
@@ -68,7 +68,7 @@ packages=(
   qt6-svg
   ripgrep
   rofi
-#  sddm
+  seatd
   slurp
   sof-firmware
   stow
@@ -88,8 +88,8 @@ packages=(
   xdg-user-dirs
   xf86-video-nouveau
   xfce4-power-manager
-#  xorg-minimal
-#  xorg-server-xephyr
+  xorg-minimal
+  xorg-server-xephyr
 )
 
 failed_packages=()
@@ -104,6 +104,23 @@ for package in "${packages[@]}"; do
     echo "Successfully installed $package"
   fi
 done
+
+# Create user directories
+xdg-user-dirs-update 
+
+# Activate services
+sudo ln -s /etc/sv/dbus /var/service/
+sudo ln -s /etc/sv/elogind /var/service/
+sudo ln -s /etc/sv/seatd /var/service/
+
+# Dploying Personnal configs
+mv $HOME/.bashrc $HOME/.bashrc.bak
+git clone https://github.com/patperron99/dotconfigs
+cd dotconfigs && git checkout void-testing && for dor in */; do stow $dir; done
+
+# Assure rights on seated
+sudo chmod 666 /var/run/seated.sock
+sudo usermod -aG docker $(whoami)
 
 # Show failed failed_packages
 if [ ${#failed_packages[@]} -ne 0 ]; then
